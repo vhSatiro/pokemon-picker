@@ -1,13 +1,16 @@
 # 🏆 Seletor de Times Pokémon
 
-Uma aplicação React estática para criar e gerenciar times Pokémon para cada geração, otimizada para deploy no GitHub Pages.
+Uma aplicação React avançada para criar e gerenciar times Pokémon para cada geração, com interface autêntica de Pokédx e otimizada para deploy no GitHub Pages.
 
 ## 🎮 Funcionalidades
 
 - **Seleção por Geração**: Monte times para Kanto, Johto, Hoenn, Sinnoh, Unova, Kalos, Alola, Galar, Paldea, Hisui e outras gerações
 - **Posições Estratégicas**: Organize seu time em 6 posições - Líder, Atacante, Defensor, Suporte, Especialista e Reserva
-- **Interface Temática**: Design inspirado no universo Pokémon com cores vibrantes e animações
-- **Totalmente Estático**: Funciona perfeitamente no GitHub Pages sem necessidade de servidor
+- **Interface Pokédex Autêntica**: Design realista de Pokédx com telas LCD, botões funcionais e animações
+- **Integração com PokeAPI**: Dados reais dos Pokémon com sprites, tipos, estatísticas e informações completas
+- **Sistema de Cache Inteligente**: Cache local com controles de desenvolvimento para performance otimizada
+- **Modelos de Dados**: Arquitetura robusta com classes Pokemon e serviços organizados
+- **Componentes Modulares**: CSS organizado por componente para melhor manutenibilidade
 
 ## 🚀 Como Usar
 
@@ -78,15 +81,32 @@ npm run deploy
 ```
 pokemon-picker/
 ├── .github/
-│   ├── workflows/
-│   │   └── deploy.yml          # GitHub Actions workflow
-│   └── copilot-instructions.md # Instruções para Copilot
+│   └── workflows/
+│       └── deploy.yml          # GitHub Actions workflow
 ├── public/
 │   └── .nojekyll              # Bypass Jekyll no GitHub Pages
 ├── src/
+│   ├── components/            # Componentes React
+│   │   ├── PokemonTable.jsx   # Tabela de seleção de times
+│   │   ├── PokemonTable.css   # Estilos da tabela
+│   │   ├── PokemonModal.jsx   # Interface Pokédex
+│   │   ├── PokemonModal.css   # Estilos da Pokédx
+│   │   ├── CacheStats.jsx     # Painel de estatísticas
+│   │   └── CacheStats.css     # Estilos do painel
+│   ├── models/
+│   │   └── Pokemon.js         # Classes de modelo Pokemon
+│   ├── services/
+│   │   ├── pokemonService.js  # Integração com PokeAPI
+│   │   └── cacheService.js    # Sistema de cache local
+│   ├── utils/
+│   │   ├── formatters.js      # Funções de formatação
+│   │   └── devUtils.js        # Utilitários de desenvolvimento
+│   ├── styles/
+│   │   └── shared.css         # Estilos compartilhados
 │   ├── App.jsx                # Componente principal
-│   ├── App.css                # Estilos temáticos
+│   ├── App.css                # Estilos globais
 │   └── main.jsx               # Entry point
+├── CSS_ORGANIZATION.md        # Documentação da organização CSS
 ├── package.json               # Dependências e scripts
 ├── vite.config.js            # Configuração do Vite
 └── README.md                 # Esta documentação
@@ -117,13 +137,18 @@ Este projeto é open source e está disponível sob a [Licença MIT](LICENSE).
 
 ## 🎯 Roadmap
 
-- [ ] Integração com API de Pokémon
-- [ ] Sistema de busca de Pokémon
+- [x] Integração com PokeAPI completa
+- [x] Interface Pokédx autêntica
+- [x] Sistema de cache inteligente
+- [x] Organização modular de CSS
+- [x] Informações detalhadas dos Pokémon
 - [ ] Salvar times no Local Storage
 - [ ] Exportar times como imagem
 - [ ] Modo escuro
-- [ ] Informações detalhadas dos Pokémon
-- [ ] Sistema de tipos e fraquezas
+- [ ] Sistema de busca avançada
+- [ ] Calculadora de tipos e fraquezas
+- [ ] Comparação de estatísticas
+- [ ] Sistema de favoritos
 
 ---
 
