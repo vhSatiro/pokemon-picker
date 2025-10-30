@@ -1,4 +1,4 @@
-import { formatPokemonName, formatPokemonNumber, isImageUrl } from '../utils/formatters';
+import { formatPokemonName, formatPokemonNumber, isImageUrl, getLocalPokemonImage } from '../utils/formatters';
 import './PokemonTable.css';
 
 const PokemonTable = ({ 
@@ -34,15 +34,19 @@ const PokemonTable = ({
                     <div className="pokemon-slot">
                       {isSelected ? (
                         <div className="pokemon-placeholder">
-                          {isImageUrl(isSelected.sprite) ? (
-                            <img 
-                              src={isSelected.sprite} 
-                              alt={isSelected.name} 
-                              className="pokemon-sprite-img" 
-                            />
-                          ) : (
-                            <span className="pokemon-sprite">{isSelected.sprite || '❓'}</span>
-                          )}
+                          <img 
+                            src={getLocalPokemonImage(isSelected.id)} 
+                            alt={isSelected.name} 
+                            className="pokemon-sprite-img"
+                            onError={(e) => {
+                              // Fallback para imagem da API se a local não existir
+                              if (e.target.src.includes('Menu_HOME_')) {
+                                e.target.src = isSelected.sprite || isSelected.sprites?.front_default;
+                              } else {
+                                e.target.style.display = 'none';
+                              }
+                            }}
+                          />
                           <span className="pokemon-name">
                             <span className="cell-pokemon-number">
                               {formatPokemonNumber(isSelected.id)}

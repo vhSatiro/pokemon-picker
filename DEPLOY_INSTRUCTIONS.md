@@ -21,8 +21,8 @@
 No terminal, execute os comandos que o GitHub vai mostrar:
 
 ```bash
-# Adicionar origin remoto (substitua SEU_USUARIO pelo seu username)
-git remote add origin https://github.com/SEU_USUARIO/pokemon-picker.git
+# Adicionar origin remoto (já configurado para vhSatiro)
+git remote add origin https://github.com/vhSatiro/pokemon-picker.git
 
 # Renomear branch para main (se necessário)
 git branch -M master
@@ -45,7 +45,7 @@ git push -u origin master
 1. **Vá para a aba "Actions"** do repositório
 2. **Aguarde** o workflow "Deploy to GitHub Pages" ser executado
 3. **Se tudo der certo**, você verá um ✅ verde
-4. **O site estará disponível** em: `https://SEU_USUARIO.github.io/pokemon-picker/`
+4. **O site estará disponível** em: `https://vhSatiro.github.io/pokemon-picker/`
 
 ## 🔧 Configurações Já Incluídas
 
@@ -58,7 +58,7 @@ git push -u origin master
 
 Seu projeto estará acessível em:
 ```
-https://SEU_USUARIO.github.io/pokemon-picker/
+https://vhSatiro.github.io/pokemon-picker/
 ```
 
 ## 🛠️ Deploy Manual (Alternativo)
@@ -91,6 +91,19 @@ gh-pages -d dist
 ### ❌ Erro de Permissão
 - Vá em Settings > Actions > General
 - Configure "Workflow permissions" para "Read and write permissions"
+
+### ❌ Erro "Custom domain not properly formatted"
+Este erro acontece quando o GitHub Pages tenta usar um domínio personalizado incorreto:
+
+1. **Vá em Settings > Pages** do seu repositório
+2. **Na seção "Custom domain"**, verifique se há algo escrito
+3. **Se houver qualquer texto**, DELETE completamente o campo
+4. **Deixe o campo "Custom domain" VAZIO**
+5. **Clique "Save"**
+6. **Aguarde alguns minutos** e tente acessar novamente
+
+O site deve funcionar apenas com a URL padrão do GitHub Pages:
+`https://vhSatiro.github.io/pokemon-picker/`
 
 ## 🎉 Sucesso!
 

@@ -15,12 +15,12 @@ export const formatTypeName = (type) => {
 };
 
 export const formatHeight = (height) => {
-  if (!height) return 'N/A';
+  if (!height) return 'N/D';
   return `${height / 10} m`;
 };
 
 export const formatWeight = (weight) => {
-  if (!weight) return 'N/A';
+  if (!weight) return 'N/D';
   return `${weight / 10} kg`;
 };
 
@@ -69,12 +69,35 @@ export const formatPokemonType = (type) => {
 export const formatStatName = (statName) => {
   const statNames = {
     'hp': 'HP',
-    'attack': 'ATK',
+    'attack': 'ATQ',
     'defense': 'DEF',
-    'special-attack': 'SP.ATK',
-    'special-defense': 'SP.DEF',
-    'speed': 'SPD'
+    'special-attack': 'ATQ.ESP',
+    'special-defense': 'DEF.ESP',
+    'speed': 'VEL'
   };
   
   return statNames[statName] || statName.toUpperCase();
+};
+
+// Get local Pokemon image path
+export const getLocalPokemonImage = (pokemonId) => {
+  if (!pokemonId) return null;
+  const paddedId = pokemonId.toString().padStart(4, '0');
+  try {
+    return new URL(`../assets/120px-Menu_HOME_${paddedId}.png`, import.meta.url).href;
+  } catch (error) {
+    console.error(`Erro ao carregar imagem local para Pokemon ID ${pokemonId}:`, error);
+    return null;
+  }
+};
+
+// Get local type image path
+export const getLocalTypeImage = (typeName) => {
+  if (!typeName) return null;
+  try {
+    return new URL(`../assets/${typeName.toLowerCase()}.png`, import.meta.url).href;
+  } catch (error) {
+    console.error(`Erro ao carregar imagem do tipo ${typeName}:`, error);
+    return null;
+  }
 };
