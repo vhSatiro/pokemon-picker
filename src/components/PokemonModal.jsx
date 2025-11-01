@@ -1,9 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { formatPokemonType, formatStatName, getLocalPokemonImage, getLocalTypeImage } from '../utils/formatters';
 import { PokemonService } from '../services/pokemonService';
 import './PokemonModal.css';
 
 const PokemonModal = ({ isOpen, onClose, selectedPokemon, onPokemonSelect, selectedGeneration, pokemonList, isLoading, isLoadingDetails }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [filteredList, setFilteredList] = useState([]);
+  const dropdownRef = useRef(null);
+
+  // Filtrar lista quando mudar o termo de busca
+  useEffect(() => {
+    if (pokemonList && searchTerm) {
+      const term = searchTerm.toLowerCase();
+      const filtered = pokemonList.filter(pokemon => {
+        const nameMatch = pokemon.name.toLowerCase().includes(term);
+        const idMatch = pokemon.id.toString().includes(term);
+        return nameMatch || idMatch;
+      });
+      setFilteredList(filtered);
+    } else {
+      setFilteredList(pokemonList || []);
+    }
+  }, [searchTerm, pokemonList]);
+
+  // Fechar dropdown ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Limpar ao fechar modal
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchTerm('');
+      setShowDropdown(false);
+    }
+  }, [isOpen]);
+
+  // Atualizar texto quando selecionar pokemon
+  useEffect(() => {
+    if (selectedPokemon && !showDropdown) {
+      setSearchTerm(`#${selectedPokemon.id.toString().padStart(3, '0')} ${selectedPokemon.name}`);
+    }
+  }, [selectedPokemon, showDropdown]);
   
   if (!isOpen) return null;
 
@@ -52,14 +98,19 @@ const PokemonModal = ({ isOpen, onClose, selectedPokemon, onPokemonSelect, selec
 
 
 
-  const handlePokemonChange = (e) => {
-    const pokemonId = parseInt(e.target.value);
-    if (pokemonId && pokemonList) {
-      const pokemon = pokemonList.find(p => p.id === pokemonId);
-      if (pokemon) {
-        onPokemonSelect(pokemon);
-      }
-    }
+  const handleInputChange = (e) => {
+    setSearchTerm(e.target.value);
+    setShowDropdown(true);
+  };
+
+  const handleInputFocus = () => {
+    setShowDropdown(true);
+  };
+
+  const handlePokemonSelect = (pokemon) => {
+    onPokemonSelect(pokemon);
+    setSearchTerm(`#${pokemon.id.toString().padStart(3, '0')} ${pokemon.name}`);
+    setShowDropdown(false);
   };
 
   const handleConfirm = () => {
@@ -144,19 +195,40 @@ const PokemonModal = ({ isOpen, onClose, selectedPokemon, onPokemonSelect, selec
                 
                 <div className="control-group">
                   <label className="control-label">POKÉMON</label>
-                  <select 
-                    onChange={handlePokemonChange}
-                    className="pokedex-select"
-                    value={selectedPokemon?.id || ''}
-                    disabled={isLoading}
-                  >
-                    <option value="">Selecionar Pokémon...</option>
-                    {pokemonList && pokemonList.map(pokemon => (
-                      <option key={pokemon.id} value={pokemon.id}>
-                        #{pokemon.id.toString().padStart(3, '0')} {pokemon.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="autocomplete-container" ref={dropdownRef}>
+                    <input
+                      type="text"
+                      className="pokedex-select autocomplete-input"
+                      placeholder="Digite para pesquisar..."
+                      value={searchTerm}
+                      onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      disabled={isLoading}
+                    />
+                    {showDropdown && filteredList.length > 0 && (
+                      <div className="autocomplete-dropdown">
+                        {filteredList.map(pokemon => (
+                          <div
+                            key={pokemon.id}
+                            className={`autocomplete-item ${selectedPokemon?.id === pokemon.id ? 'selected' : ''}`}
+                            onClick={() => handlePokemonSelect(pokemon)}
+                          >
+                            <span className="autocomplete-id">
+                              #{pokemon.id.toString().padStart(3, '0')}
+                            </span>
+                            <span className="autocomplete-name">{pokemon.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {showDropdown && filteredList.length === 0 && searchTerm && (
+                      <div className="autocomplete-dropdown">
+                        <div className="autocomplete-empty">
+                          Nenhum Pokémon encontrado
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 

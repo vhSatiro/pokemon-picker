@@ -1,18 +1,39 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import './styles/shared.css'
 import { PokemonService } from './services/pokemonService'
 import PokemonTable from './components/PokemonTable'
 import PokemonModal from './components/PokemonModal'
 import CacheStats from './components/CacheStats'
+import ExportButton from './components/ExportButton'
 import DevUtils from './utils/devUtils'
 
 function App() {
+  // Constante para a chave do localStorage
+  const STORAGE_KEY = 'pokemon-picker-selections';
+
+  // Ref para a tabela (para exportação)
+  const tableRef = useRef(null);
+
   // Inicializar dev utilities
   useEffect(() => {
     DevUtils.init();
   }, []);
-  const [selectedPokemon, setSelectedPokemon] = useState({})
+
+  // Carregar seleções salvas do localStorage
+  const loadSavedSelections = () => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar seleções salvas:', error);
+    }
+    return {};
+  };
+
+  const [selectedPokemon, setSelectedPokemon] = useState(loadSavedSelections)
   const [modalOpen, setModalOpen] = useState(false)
   const [currentSelection, setCurrentSelection] = useState({ generation: '', position: '' })
   const [selectedInModal, setSelectedInModal] = useState(null)
@@ -26,6 +47,15 @@ function App() {
 
   // Posições do time
   const teamPositions = ['1', '2', '3', '4', '5', '6']
+
+  // Salvar seleções no localStorage sempre que houver mudanças
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedPokemon));
+    } catch (error) {
+      console.error('Erro ao salvar seleções:', error);
+    }
+  }, [selectedPokemon])
 
   const handleCellClick = async (generation, position) => {
     const key = `${generation}-${position}`
@@ -101,7 +131,13 @@ function App() {
       </header>
 
       <main className="main-content">
+        <ExportButton 
+          tableRef={tableRef}
+          disabled={Object.keys(selectedPokemon).length === 0}
+        />
+
         <PokemonTable 
+          ref={tableRef}
           generations={generations}
           teamPositions={teamPositions}
           selectedPokemon={selectedPokemon}

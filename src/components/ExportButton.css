@@ -1,0 +1,89 @@
+/* Export Button Styles */
+.export-button {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto 2rem auto;
+}
+
+.export-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.export-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.export-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.export-icon {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.export-button:hover:not(:disabled) .export-icon {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.export-text {
+  transition: opacity 0.3s ease;
+}
+
+.export-loading {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.export-button.exporting .export-text,
+.export-button.exporting .export-icon {
+  display: none;
+}
+
+.export-button.exporting .export-loading {
+  display: flex;
+}
+
+/* Spinner Animation */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .export-button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+  
+  .export-icon {
+    font-size: 1rem;
+  }
+}
